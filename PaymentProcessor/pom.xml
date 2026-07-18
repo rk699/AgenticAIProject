@@ -5,11 +5,6 @@
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-<!--    AI-->
-
-<!-- deleted new	 -->
-<!--AI-->
-<!--    created new-->
     <!-- Spring Boot Parent (Manages dependency versions) -->
     <parent>
         <groupId>org.springframework.boot</groupId>
