@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: payment-processing-system
+  
+  profiles:
+    active: dev
+
+ 
+  datasource:
+    url: jdbc:h2:file:C:/Users/purus/test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create             # can also use create-drop for tests
+    show-sql: true                 # H2 is lightweight, so you can enable SQL logging
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+  h2:
+    console:
+      enabled: true                 # Enables H2 web console
+      path: /h2-console
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+      retries: 3
+      compression-type: snappy
+      linger-ms: 10
+      batch-size: 32768
+    consumer:
+      group-id: payment-processor-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      auto-commit-interval-ms: 1000
+      max-poll-records: 500
+      fetch-max-bytes: 52428800
+  
+
+  
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1800000
+
+server:
+  port: 8080
+  servlet:
+    context-path: /processPay
+  compression:
+    enabled: true
+    min-response-size: 1024
+
+logging:
+  level:
+    root: INFO
+    com.paymenttech.PaymentProcessor: DEBUG
+    org.springframework.kafka: INFO
+    org.springframework.data.redis: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 10
+
+kafka:
+  bootstrap-servers: localhost:9092
+  partitions: 10
+  replication-factor: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+#  metrics:
+#    export:
+#      prometheus:
+#        enabled: true
